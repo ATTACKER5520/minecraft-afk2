@@ -41,10 +41,7 @@ function startBot() {
         bot.chat(toSay);
       } else if (message === 'tpht') {
         bot.chat(`/tpa ${config.controller}`);
-      } else if (message === 'BR') {
-        shouldBreakLogs = true;
-        bot.chat('/msg ATTACKER 🪓 Oak leaves buzish boshlandi!');
-      }
+      } 
     }
   });
 
@@ -63,52 +60,7 @@ function startBot() {
         setTimeout(() => {
           bot.setControlState('jump', false);
         }, 500);
-      }, 3 * 60 * 1000);
-
-      // Har 1 soniyada oak_leaves ni tekshirish va buzish
-      setInterval(() => {
-        if (!shouldBreakLogs) return;
-
-        ensureHoeEquipped();
-
-        const blocks = bot.findBlocks({
-          matching: block => block.name === 'oak_leaves',
-          maxDistance: 6,
-          count: 1
-        });
-
-        if (blocks.length > 0) {
-          const block = bot.blockAt(blocks[0]);
-          if (block && bot.canDigBlock(block)) {
-            bot.dig(block).catch(err => console.log('❌ Buzishda xato:', err.message));
-          }
-        }
-
-        // Inventardagi oak_leaves ni otib yuborish
-        const dropItems = bot.inventory.items().filter(item => item.name === 'oak_leaves');
-
-        if (dropItems.length > 0) {
-          for (const item of dropItems) {
-            bot.tossStack(item).catch(err => console.log('❌ Item otishda xato:', err.message));
-          }
-        }
-      }, 1000);
-
-    }, 5000);
-  });
-
-  function ensureHoeEquipped() {
-    const hoe = bot.inventory.items().find(item => item.name === 'diamond_hoe');
-
-    if (!hoe) {
-      console.log('❌ Inventoryda diamond_hoe topilmadi');
-      return;
-    }
-
-    if (!bot.heldItem || bot.heldItem.name !== 'diamond_hoe') {
-      bot.equip(hoe, 'hand').catch(err => console.log('❌ Hoe ushlashda xato:', err.message));
-    }
-  }
+      }, 3 * 60 * 1000);     
 
   bot.on('end', () => {
     console.log('⚠️ Bot serverdan chiqdi. Qayta ulanmoqda...');
