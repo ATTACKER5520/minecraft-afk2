@@ -1,18 +1,17 @@
+
 const express = require('express');
 const mineflayer = require('mineflayer');
-const { Vec3 } = require('vec3');
 
 const app = express();
 let bot;
-let shouldBreakLogs = false;
 
 const config = {
   host: 'hypixel.uz',
   port: 25566,
-  version: '1.13.2',
+  version: '1.12',
   username: 'afk_heater',
   password: 'abdu2006',
-  loginPassword: '1234444',
+  loginPassword: '1234444', // agar login komandasi boshqa parol bilan bo‘lsa
   controller: 'ATTACKER'
 };
 
@@ -41,8 +40,15 @@ function startBot() {
         bot.chat(toSay);
       } else if (message === 'tpht') {
         bot.chat(`/tpa ${config.controller}`);
-      } 
+      }
     }
+  });
+
+  bot.on('physicTick', () => {
+    const playerEntity = bot.nearestEntity(entity => entity.type === 'player');
+    if (!playerEntity) return;
+    const pos = playerEntity.position.offset(0, playerEntity.height, 0);
+    bot.lookAt(pos);
   });
 
   bot.on('death', () => {
@@ -52,15 +58,15 @@ function startBot() {
 
   bot.on('spawn', () => {
     console.log('✅ Bot spawn bo‘ldi!');
+    // har 5 sekundda sakrash
+    setInterval(() => {
+      bot.setControlState('jump', true);
+      setTimeout(() => {
+        bot.setControlState('jump', false);
+      }, 500);
+    }, 5000);
 
-    setTimeout(() => {
-      // Har 3 daqiqada 1 marta sakrash
-      setInterval(() => {
-        bot.setControlState('jump', true);
-        setTimeout(() => {
-          bot.setControlState('jump', false);
-        }, 500);
-      }, 3 * 60 * 1000);     
+  });
 
   bot.on('end', () => {
     console.log('⚠️ Bot serverdan chiqdi. Qayta ulanmoqda...');
