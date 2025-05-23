@@ -1,90 +1,55 @@
-
-const express = require('express');
 const mineflayer = require('mineflayer');
+const readline = require('readline');
 
-const app = express();
-let bot;
-
-const config = {
-  host: 'hypixel.uz',
-  port: 25566,
-  version: '1.12',
-  username: 'afk_heater',
-  password: 'abdu2006',
-  loginPassword: '1234444', // agar login komandasi boshqa parol bilan bo‘lsa
-  controller: 'ATTACKER'
-};
-
-function startBot() {
-  bot = mineflayer.createBot({
-    host: config.host,
-    port: config.port,
-    version: config.version,
-    username: config.username
+function createBot() {
+  const bot = mineflayer.createBot({
+    host: 'minestax.uz',
+    port: 25565,
+    username: 'amirxon5768',
+    version: '1.20.1' // Server versiyasini shu yerga to‘g‘ri yozing
   });
 
-  bot.on('messagestr', (message) => {
-    console.log(message);
-    if (message.includes('/register')) {
-      bot.chat(`/register ${config.password} ${config.password}`);
-    }
-    if (message.includes('/login')) {
-      bot.chat(`/login ${config.loginPassword}`);
-    }
-  });
+  bot.on('login', () => {
+    console.log('✅ Bot muvaffaqiyatli tizimga kirdi.');
 
-  bot.on('chat', (username, message) => {
-    if (username === config.controller) {
-      if (message.startsWith('2 ')) {
-        const toSay = message.replace('2 ', '');
-        bot.chat(toSay);
-      } else if (message === 'tpht') {
-        bot.chat(`/tpa ${config.controller}`);
-      }
-    }
-  });
-
-  bot.on('physicTick', () => {
-    const playerEntity = bot.nearestEntity(entity => entity.type === 'player');
-    if (!playerEntity) return;
-    const pos = playerEntity.position.offset(0, playerEntity.height, 0);
-    bot.lookAt(pos);
-  });
-
-  bot.on('death', () => {
-    bot.chat('/back');
-    bot.chat(`/w ${config.controller} heater uldi`);
-  });
-
-  bot.on('spawn', () => {
-    console.log('✅ Bot spawn bo‘ldi!');
-    // har 5 sekundda sakrash
+    // Har 5 daqiqada /boxpvp yuboradi
     setInterval(() => {
-      bot.setControlState('jump', true);
-      setTimeout(() => {
-        bot.setControlState('jump', false);
-      }, 500);
-    }, 5000);
+      bot.chat('/boxpvp');
+      console.log('📤 Bot: /boxpvp yuborildi');
+    }, 5 * 60 * 1000);
 
+    // Har 20 soniyada sakraydi (lekin log yo‘q)
+    setInterval(() => {
+      if (bot.entity && bot.entity.onGround) {
+        bot.setControlState('jump', true);
+        setTimeout(() => bot.setControlState('jump', false), 300);
+      }
+    }, 20 * 1000);
+
+    // Konsoldan /send orqali yozish
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout
+    });
+
+    rl.on('line', (input) => {
+      if (input.startsWith('/send ')) {
+        const msg = input.slice(6);
+        bot.chat(msg);
+        console.log(`💬 Botga yuborildi: ${msg}`);
+      }
+    });
   });
 
-  bot.on('end', () => {
-    console.log('⚠️ Bot serverdan chiqdi. Qayta ulanmoqda...');
-    setTimeout(startBot, 5000);
+  bot.on('end', (reason) => {
+    console.log(`🔌 Bot uzildi. Sabab: ${reason}`);
+    console.log('♻️ 5 soniyada qayta ulanmoqda...');
+    setTimeout(createBot, 5000);
   });
 
-  bot.on('error', err => {
-    console.log('❌ Bot xatolik berdi:', err.message);
+  bot.on('error', (err) => {
+    console.log(`❌ Xatolik: ${err.message}`);
   });
 }
 
-// Botni ishga tushiramiz
-startBot();
-
-// UptimeRobot uchun web server
-app.get('/', (req, res) => {
-  res.send('✅ Bot ishlayapti!');
-});
-app.listen(3000, () => {
-  console.log('🌐 Web server ishga tushdi (port 3000)');
-});
+createBot();
