@@ -1,7 +1,6 @@
 {
-  "name": "nodejs",
+  "name": "netherite_bot",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -10,9 +9,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^18.0.6",
-    "dotenv": "^16.4.7",
-    "express": "^4.21.2",
-    "mineflayer": "^3.11.2"
-  }
+    "minecraft-data": "^3.89.0",
+    "mineflayer": "^4.29.0",
+    "mineflayer-armor-manager": "^1.4.2",
+    "mineflayer-auto-eat": "^3.3.6",
+    "mineflayer-pathfinder": "^2.4.5"
+  },
+  "description": ""
 }
