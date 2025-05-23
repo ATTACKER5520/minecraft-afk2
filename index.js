@@ -16,7 +16,7 @@ function createBot() {
     setInterval(() => {
       bot.chat('/boxpvp');
       console.log('📤 Bot: /boxpvp yuborildi');
-    }, 5 * 60 * 1000);
+    }, 1 * 60 * 1000);
 
     // Har 20 soniyada sakraydi (lekin log yo‘q)
     setInterval(() => {
