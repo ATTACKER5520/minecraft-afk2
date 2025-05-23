@@ -6,7 +6,7 @@ function createBot() {
     host: 'minestax.uz',
     port: 25565,
     username: 'amirxon5768',
-    version: '1.20.1' // Server versiyasini shu yerga to‘g‘ri yozing
+    version: '1.17.1' // Server versiyasini shu yerga to‘g‘ri yozing
   });
 
   bot.on('login', () => {
