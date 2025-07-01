@@ -10,7 +10,7 @@ const config = {
   version: '1.12',
   username: 'BREACKER6',
   password: 'abdu2006',
-  loginPassword: '2000609', // agar login komandasi boshqa parol bilan bo‘lsa
+  loginPassword: '', // agar login komandasi boshqa parol bilan bo‘lsa
   controller: 'ATTACKER'
 };
 
